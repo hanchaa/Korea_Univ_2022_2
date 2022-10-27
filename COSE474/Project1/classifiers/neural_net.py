@@ -79,12 +79,11 @@ class TwoLayerNet(object):
     #############################################################################
 	# *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 	
-    hidden_1 = X.dot(W1) + b1
+    z_1 = X.dot(W1) + b1
     
-    relu_1 = np.maximum(0, hidden_1)
+    h_1 = np.maximum(0, z_1)
     
-    hidden_2 = relu_1.dot(W2) + b2
-    scores = hidden_2
+    scores = h_1.dot(W2) + b2
 	
 	# *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     #############################################################################
@@ -126,18 +125,18 @@ class TwoLayerNet(object):
     #############################################################################
 	# *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 	
-    d_hidden_2 = prob
-    d_hidden_2[range(N), y] -= 1
-    d_hidden_2 /= N
+    d_scores = prob
+    d_scores[range(N), y] -= 1
+    d_scores /= N
     
-    d_W2 = relu_1.T.dot(d_hidden_2)
-    d_b2 = d_hidden_2.sum(axis=0)
+    d_W2 = h_1.T.dot(d_scores)
+    d_b2 = d_scores.sum(axis=0)
     
-    d_relu_1 = d_hidden_2.dot(W2.T)
-    d_hidden_1 = d_relu_1 * (hidden_1 > 0)
+    d_h_1 = d_scores.dot(W2.T)
+    d_z_1 = d_h_1 * (z_1 > 0)
     
-    d_W1 = X.T.dot(d_hidden_1)
-    d_b1 = d_hidden_1.sum(axis=0)
+    d_W1 = X.T.dot(d_z_1)
+    d_b1 = d_z_1.sum(axis=0)
 	
     d_W2 += 2 * reg * W2
     d_W1 += 2 * reg * W1

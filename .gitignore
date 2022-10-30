@@ -1,0 +1,5 @@
+*.ini
+.idea
+**/*/datasets/
+**/*/__pycache__/
+**/*/.ipynb_checkpoints/

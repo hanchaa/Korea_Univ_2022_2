@@ -3,3 +3,6 @@
 **/*/datasets/
 **/*/__pycache__/
 **/*/.ipynb_checkpoints/
+
+COSE474/osproj/
+**/*/.DS_Store

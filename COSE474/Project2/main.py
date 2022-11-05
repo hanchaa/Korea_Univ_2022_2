@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-# from vgg16_full import *
+from vgg16_full import *
 from resnet50_skeleton import *
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -43,6 +43,8 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 # Choose model
 model = ResNet50_layer4().to(device)
 PATH = './resnet50_epoch285.ckpt' # test acc would be almost 80
+# model = vgg16().to(device)
+# PATH = './vgg16_epoch250.ckpt'
 
 # model = vgg16().to(device)
 # PATH = './vgg16_epoch250.ckpt'  # test acc would be almost 85

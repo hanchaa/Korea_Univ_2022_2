@@ -73,7 +73,7 @@ class ResNet50_layer4(nn.Module):
     def __init__(self, num_classes=10): # Hint : How many classes in Cifar-10 dataset?
         super(ResNet50_layer4, self).__init__()
         self.layer1 = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=2),
+            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3),
                 # Hint : Through this conv-layer, the input image size is halved.
                 #        Consider stride, kernel size, padding and input & output channel sizes.
             nn.BatchNorm2d(64),

@@ -35,6 +35,9 @@ class ResidualBlock(nn.Module):
                 ############## fill in here
                 # Hint : use these functions (conv1x1, conv3x3)
                 #########################################
+                conv1x1(in_channels, middle_channels, 2, 0),
+                conv3x3(middle_channels, middle_channels, 1, 1),
+                conv1x1(middle_channels, out_channels, 1, 0)
             )
             self.downsize = conv1x1(in_channels, out_channels, 2, 0)
 
@@ -43,6 +46,9 @@ class ResidualBlock(nn.Module):
                 ##########################################
                 ############# fill in here
                 #########################################
+                conv1x1(in_channels, middle_channels, 1, 0),
+                conv3x3(middle_channels, middle_channels, 1, 1),
+                conv1x1(middle_channels, out_channels, 1, 0)
             )
             self.make_equal_channel = conv1x1(in_channels, out_channels, 1, 0)
         self.activation = nn.ReLU(inplace=True)
@@ -72,22 +78,22 @@ class UNetWithResnet50Encoder(nn.Module):
         super().__init__()
         self.n_classes = n_classes
         self.layer1 = nn.Sequential(
-            nn.Conv2d(#blank#, #blank#, #blank#, #blank#, #blank# ), # Code overlaps with previous assignments
+            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3), # Code overlaps with previous assignments
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True)#,
         )
         self.pool = nn.MaxPool2d(3, 2, 1, return_indices=True)
 
         self.layer2 = nn.Sequential(
-            ResidualBlock(#blank#, #blank#, #blank#),
-            ResidualBlock(#blank#, #blank#, #blank#),
-            ResidualBlock(#blank#, #blank#, #blank#, downsample=True) # Code overlaps with previous assignments
+            ResidualBlock(64, 64, 256),
+            ResidualBlock(256, 64, 256),
+            ResidualBlock(256, 64, 256, downsample=True) # Code overlaps with previous assignments
         )
         self.layer3 = nn.Sequential(
-            ResidualBlock(#blank#, #blank#, #blank#),
-            ResidualBlock(#blank#, #blank#, #blank#),
-            ResidualBlock(#blank#, #blank#, #blank#),
-            ResidualBlock(#blank#, #blank#, #blank#, downsample=False) # Code overlaps with previous assignments
+            ResidualBlock(256, 128, 512),
+            ResidualBlock(512, 128, 512),
+            ResidualBlock(512, 128, 512),
+            ResidualBlock(512, 128, 512, downsample=False) # Code overlaps with previous assignments
         )
         self.bridge = conv(512, 512)
         self.UnetConv1 = conv(512, 256)
@@ -113,11 +119,11 @@ class UNetWithResnet50Encoder(nn.Module):
         out3 = self.layer3(out2)
         x = self.bridge(out3) # bridge
         x = self.UpConv1(x)
-        x = #######fill in here ####### hint : concatenation
+        x = torch.concat((x, out2), dim=1)
         x = self.UnetConv1(x)
         x = self.upconv2_1(x, output_size=torch.Size([x.size(0),256,64,64]))
         x = self.upconv2_2(x)
-        x = #######fill in here ####### hint : concatenation
+        x = torch.concat((x, out1), dim=1)
         x = self.upsample(x)
         x = self.UnetConv2_1(x)        
         x = self.UnetConv2_2(x, output_size=torch.Size([x.size(0), 64, 256, 256]))

@@ -5,6 +5,7 @@ from modules_skeleton import *
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
 from resnet_encoder_unet_skeleton import *
+from UNet_skeleton import *
 
 ###########################################################################
 # Implement the main code.
@@ -16,7 +17,7 @@ batch_size = 16
 learning_rate = 0.001
 
 # VOC2012 data directory
-data_dir = ""
+data_dir = "VOC2012"
 resize_size = 256
 
 transforms = transforms.Compose([
@@ -38,14 +39,18 @@ validLoader = DataLoader(valset, batch_size = batch_size, shuffle=True)
 
 ##### fill in here #####
 ##### Hint : Initialize the model (Options : UNet, resnet_encoder_unet)
+# model = Unet(3, 22)
+model = UNetWithResnet50Encoder(22)
 
 ###############################################################################
 
 # Loss Function
 ##### fill in here -> hint : set the loss function #####
+criterion = nn.CrossEntropyLoss()
 
 # Optimizer
 ##### fill in here -> hint : set the Optimizer #####
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = StepLR(optimizer, step_size=4, gamma=0.1)
 
 # parameters
@@ -57,6 +62,9 @@ model = model.to(device)
 
 ##### fill in here #####
 ##### Hint : load the model parameter, which is given
+# checkpoint = torch.load("../trained_model/UNet_trained_model.pth", map_location=device)
+checkpoint = torch.load("../trained_model/resnet_encoder_unet.pth")
+model.load_state_dict(checkpoint)
 
 # Train
 import os
@@ -103,6 +111,7 @@ for epoch in range(epochs):
         savepath2 = savepath1 + str(epoch) + ".pth"
         ##### fill in here #####
         ##### Hint : save the model parameter
+        torch.save(model.state_dict(), savepath2)
 
 print('Finish Training')
 

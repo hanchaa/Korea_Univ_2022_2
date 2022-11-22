@@ -4,7 +4,7 @@ import torch
 ###########################################################################
     # Implement the train/test module.
     # Understand train/test codes, and fill in the blanks.
-def train_model(trainloader, model, criterion, optimizer,scheduler, device):
+def train_model(trainloader, model, criterion, optimizer, scheduler, device):
     model.train()
     for i, (inputs, labels) in enumerate(trainloader):
         from datetime import datetime
@@ -18,6 +18,14 @@ def train_model(trainloader, model, criterion, optimizer,scheduler, device):
         ####### 1. Get the output out of model, and Get the Loss
         ####### 3. optimizer
         ####### 4. backpropagation
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    scheduler.step()
         #########################################
 
 def accuracy_check(label, pred):
@@ -51,6 +59,8 @@ def get_loss_train(model, trainloader, criterion, device):
             ####### Hint :
             ####### Get the output out of model, and Get the Loss
             ####### Think what's different from the above
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
             #########################################
             outputs = np.transpose(outputs.cpu(), (0,2,3,1))
             preds = torch.argmax(outputs, dim=3).float()
@@ -84,6 +94,8 @@ def val_model(model, valloader, criterion, device, dir):
             ####### Hint :
             ####### Get the output out of model, and Get the Loss
             ####### Think what's different from the above
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
             #########################################
 
             outputs = np.transpose(outputs.cpu(), (0, 2, 3, 1))
@@ -107,6 +119,8 @@ def val_model(model, valloader, criterion, device, dir):
                         ####### convert segmentation mask into r,g,b (both for image and predicted result)
                         ####### image should become temp_rgb, result should become temp_label
                         ####### You should use cls_invert[]
+                        temp_label[j, k] = cls_invert[temp_l[j, k]]
+                        temp_rgb[j, k] = cls_invert[temp[j, k]]
                         #########################################
 
                 img = inputs[i].cpu()

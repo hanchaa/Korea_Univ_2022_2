@@ -6,3 +6,6 @@
 
 COSE474/osproj/
 **/*/.DS_Store
+
+COSE474/Project3/skeleton_code/VOC2012/
+**/*.pth

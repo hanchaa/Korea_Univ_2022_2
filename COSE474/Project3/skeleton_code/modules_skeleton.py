@@ -1,12 +1,13 @@
 import numpy as np
 import torch
+from tqdm import tqdm
 
 ###########################################################################
     # Implement the train/test module.
     # Understand train/test codes, and fill in the blanks.
 def train_model(trainloader, model, criterion, optimizer, scheduler, device):
     model.train()
-    for i, (inputs, labels) in enumerate(trainloader):
+    for i, (inputs, labels) in enumerate(tqdm(trainloader)):
         from datetime import datetime
 
         inputs = inputs.to(device)
@@ -49,7 +50,7 @@ def get_loss_train(model, trainloader, criterion, device):
     model.eval()
     total_acc = 0
     total_loss = 0
-    for batch, (inputs, labels) in enumerate(trainloader):
+    for batch, (inputs, labels) in enumerate(tqdm(trainloader)):
         with torch.no_grad():
             inputs = inputs.to(device)
             labels = labels.to(device = device, dtype = torch.int64)
@@ -84,7 +85,7 @@ def val_model(model, valloader, criterion, device, dir):
     total_val_acc = 0
     n=0
 
-    for batch, (inputs, labels) in enumerate(valloader):
+    for batch, (inputs, labels) in enumerate(tqdm(valloader)):
         with torch.no_grad():
 
             inputs = inputs.to(device)

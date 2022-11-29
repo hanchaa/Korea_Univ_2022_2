@@ -39,8 +39,8 @@ validLoader = DataLoader(valset, batch_size = batch_size, shuffle=True)
 
 ##### fill in here #####
 ##### Hint : Initialize the model (Options : UNet, resnet_encoder_unet)
-# model = Unet(3, 22)
-model = UNetWithResnet50Encoder(22)
+model = Unet(3, 22)
+# model = UNetWithResnet50Encoder(22)
 
 ###############################################################################
 
@@ -54,7 +54,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = StepLR(optimizer, step_size=4, gamma=0.1)
 
 # parameters
-epochs = 40
+epochs = 1
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -62,8 +62,8 @@ model = model.to(device)
 
 ##### fill in here #####
 ##### Hint : load the model parameter, which is given
-# checkpoint = torch.load("../trained_model/UNet_trained_model.pth", map_location=device)
-checkpoint = torch.load("../trained_model/resnet_encoder_unet.pth")
+checkpoint = torch.load("../trained_model/UNet_trained_model.pth", map_location=device)
+# checkpoint = torch.load("../trained_model/resnet_encoder_unet.pth")
 model.load_state_dict(checkpoint)
 
 # Train
@@ -71,7 +71,7 @@ import os
 from datetime import datetime
 
 now = datetime.now()
-date = now.strftime('%Y-%m-%d(%H:%M)')
+date = now.strftime('%Y-%m-%d(%H%M)')
 def createFolder(dir):
     try:
         if not os.path.exists(dir):

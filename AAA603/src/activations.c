@@ -100,6 +100,7 @@ float activate(float x, ACTIVATION a)
 void activate_array(float *x, const int n, const ACTIVATION a)
 {
     int i;
+    #pragma omp parallel for private(i)
     for(i = 0; i < n; ++i){
         x[i] = activate(x[i], a);
     }

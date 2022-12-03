@@ -15,13 +15,14 @@ float im2col_get_pixel(float *im, int height, int width, int channels,
 //https://github.com/BVLC/caffe/blob/master/LICENSE
 void im2col_cpu(float* data_im,
      int channels,  int height,  int width,
-     int ksize,  int stride, int pad, float* data_col) 
+     int ksize,  int stride, int pad, float* data_col)
 {
     int c,h,w;
     int height_col = (height + 2*pad - ksize) / stride + 1;
     int width_col = (width + 2*pad - ksize) / stride + 1;
 
     int channels_col = channels * ksize * ksize;
+    #pragma omp parallel for private(c, h, w)
     for (c = 0; c < channels_col; ++c) {
         int w_offset = c % ksize;
         int h_offset = (c / ksize) % ksize;

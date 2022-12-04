@@ -26,8 +26,8 @@ void col2im_cpu(float* data_col,
         int h_offset = (c / ksize) % ksize;
         int c_im = c / ksize / ksize;
         for (h = 0; h < height_col; ++h) {
+            int im_row = h_offset + h * stride;
             for (w = 0; w < width_col; ++w) {
-                int im_row = h_offset + h * stride;
                 int im_col = w_offset + w * stride;
                 int col_index = (c * height_col + h) * width_col + w;
                 double val = data_col[col_index];
